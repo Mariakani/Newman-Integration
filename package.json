@@ -1,12 +1,12 @@
 {
-  "name": "postman-integration",
+  "name": "postman_integration",
   "version": "1.0.0",
   "description": "Projects for storing postman collections tests",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "api_endpoints_test": "newman run TravelerAPIcollection.json -e developenvironment.json"
+    "api-endpoints-test": "newman run TravelerAPIcollection.json -e developenvironment.json"
   },
   "author": "Mariak Achuoth",
   "dependencies": {
