@@ -6,7 +6,7 @@
     "test": "test"
   },
   "scripts": {
-    "api-endpoints-test": "newman run TravelerAPIcollection.json -e developenvironment.json"
+    "api-endpoints-test": "newman run TravelerAPIcollection -e developenvironment"
   },
   "author": "Mariak Achuoth",
   "dependencies": {
