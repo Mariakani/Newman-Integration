@@ -6,7 +6,7 @@
     "test": "test"
   },
   "scripts": {
-    "api-endpoints-test": "newman run /Users/machuoth/My QA/Postman-Integration/test>TravelerAPIcollection -e developenvironment"
+    "apitest": "newman run Users/machuoth/My QA/Postman-Integration/test>TravelerAPIcollection -e developenvironment"
   },
   "author": "Mariak Achuoth",
   "dependencies": {
