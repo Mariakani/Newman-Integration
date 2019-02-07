@@ -686,11 +686,19 @@
 									"",
 									"var jsonData = pm.response.json();",
 									"",
-									"if(jsonData[0].hasOwnProperty(\"date\")){",
-									"pm.environment.set(\"pass_date\", jsonData[0].date);",
-									"}else{return;}",
-									"    ",
-									""
+									"// if(jsonData[0].hasOwnProperty(\"date\")){",
+									"// pm.environment.set(\"pass_date\", jsonData[0].date);",
+									"// }else{return;}",
+									"",
+									"for(var i = 0; i < jsonData.length; i++)",
+									"{",
+									"    if(jsonData[i].available ===true)",
+									"    {",
+									"        pm.environment.set(\"pass_date\", jsonData[i].date);",
+									"        pm.environment.set(\"time_in_minutes\", jsonData[i].timesInMinutes);",
+									"        break;",
+									"    }",
+									"}"
 								],
 								"type": "text/javascript"
 							}
@@ -804,7 +812,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{traveler_url}}/product/{{Item-Id}}/pass?date=2019-02-07&time-in-minutes=540",
+							"raw": "{{traveler_url}}/product/{{Item-Id}}/pass?date={{pass_date}}&time-in-minutes={{time_in_minutes}}",
 							"host": [
 								"{{traveler_url}}"
 							],
@@ -816,11 +824,11 @@
 							"query": [
 								{
 									"key": "date",
-									"value": "2019-02-07"
+									"value": "{{pass_date}}"
 								},
 								{
 									"key": "time-in-minutes",
-									"value": "540"
+									"value": "{{time_in_minutes}}"
 								}
 							]
 						}
