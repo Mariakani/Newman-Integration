@@ -1,0 +1,84 @@
+{
+  "info": {
+    "_postman_id": "ffb6de86-c21f-4f0b-b8af-7a81240b149a",
+    "name": "Guest Admin API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "03b9ceda-ca66-48c9-8216-6c53ad8d47e9",
+      "name": "auth",
+      "description": "Folder for auth",
+      "item": [
+        {
+          "_postman_id": "bba99908-6191-42f6-932f-ec2fadebcf58",
+          "name": "Obtain a JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "244096f4-54e8-4fc5-8bee-411cb5de6e72",
+                "exec": [
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"AccessToken\", jsonData.token);",
+                  "   ",
+                  "//<---check whether the bearer token is empty--->",
+                  "    pm.test(\"Access token should be present\", function(){",
+                  "        pm.expect(!!jsonData.token).to.eql(true);",
+                  "    });",
+                  "    ",
+                  "pm.test(\"Status code should be 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e411e58d-cc89-491f-8154-02e993cd215c",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"support@guestlogix.com\",\r\n  \"password\": \"test\"\r\n}"
+            },
+            "url": "{{admin_url}}/auth/token"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

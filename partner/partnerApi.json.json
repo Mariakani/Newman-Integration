@@ -1,0 +1,903 @@
+{
+  "info": {
+    "_postman_id": "74e770fd-cfa0-4de1-a533-2ae7bf78caf7",
+    "name": "Guest Partner API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "23c4c2ee-ce2f-438a-9545-06283062fcdf",
+      "name": "auth",
+      "description": "Folder for auth",
+      "item": [
+        {
+          "_postman_id": "3f270ac5-2765-40a9-ba66-6bedcf6986f8",
+          "name": "Obtain a JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "244096f4-54e8-4fc5-8bee-411cb5de6e72",
+                "exec": [
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "    pm.environment.set(\"partner_access_token\", jsonData.token);",
+                  "   ",
+                  "    pm.test(\"Access token should be present\", function(){",
+                  "        pm.expect(!!jsonData.token).to.eql(true);",
+                  "    });",
+                  "    ",
+                  "pm.test(\"Status code should be 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e411e58d-cc89-491f-8154-02e993cd215c",
+                "exec": [
+                  "//pm.environment.set(\"x-api-key\", \"testtesttesttesttest\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n  \"email\": \"admin@guestlogix.com\",\r\n  \"password\": \"test\"\r\n}\r\n"
+            },
+            "url": "{{partner_url}}/auth/token"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "3ef6bcfc-42f6-4f95-bef3-2b9bbc24010a",
+          "name": "Login in with Partner not in the system",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "244096f4-54e8-4fc5-8bee-411cb5de6e72",
+                "exec": [
+                  "pm.test(\"errorMessage\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorMessage).to.eql(\"Partner not found\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status code should be 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e411e58d-cc89-491f-8154-02e993cd215c",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n  \"email\": \"admin22@guestlogix.com\",\r\n  \"password\": \"test\"\r\n}\r\n"
+            },
+            "url": "{{partner_url}}/auth/token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "_postman_id": "8e1a801d-db70-4892-9df7-997e60c666b5",
+      "name": "Devices",
+      "description": "",
+      "item": [
+        {
+          "_postman_id": "fd6a2fb1-5afd-44ca-9021-21d3d4032a9a",
+          "name": "Get Devices",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d3b6ae55-06fe-4a7b-b485-399fd710ed13",
+                "exec": [
+                  "",
+                  "//var jsonData = pm.response.json();",
+                  "pm.test(\"Status code should be 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response time should be less than 2500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{partner_url}}/device",
+            "description": "Returns a list of all devices for the company"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "_postman_id": "3f8f2b25-fe48-473c-bac4-272fcd0e66ac",
+      "name": "Device_sheet",
+      "description": "\r\n",
+      "item": [
+        {
+          "_postman_id": "6e048ac2-6c0c-4a04-b119-5043b9165435",
+          "name": "Get Device_sheet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e6e882db-91d9-4547-a3fd-341efefbd446",
+                "exec": [
+                  "pm.test(\"Status code should be 200\", function (){",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\")",
+                  "});",
+                  "",
+                  "pm.test(\"Response time should be  less than 2500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{partner_url}}/device/device-sheet",
+            "description": "Returns an csv file containing all devices for the company"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "_postman_id": "94add766-2e8c-4bf3-957a-9d8ffedb6aea",
+      "name": "Order",
+      "description": "",
+      "item": [
+        {
+          "_postman_id": "90de22d1-ecca-4a65-8070-25932ff604b8",
+          "name": "get Order date only",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ddde46f6-5e0e-4d4b-a5b8-8fac38836f6c",
+                "exec": [
+                  "const Status = Math.floor(Math.random()*5 + 1);",
+                  "console.log(Status);",
+                  "pm.environment.set(\"status\", Status);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e5fdf1d3-23e5-451a-8e3a-dc19c2dcdb70",
+                "exec": [
+                  "pm.test(\"Status code should be 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time should be less than 2500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{partner_url}}/order?skip=0&take=20&from=2019-02-06 15:41:36&to=2019-02-21 20:24:37",
+              "host": [
+                "{{partner_url}}"
+              ],
+              "path": [
+                "order"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "equals": true
+                },
+                {
+                  "key": "take",
+                  "value": "20",
+                  "equals": true
+                },
+                {
+                  "key": "from",
+                  "value": "2019-02-06 15:41:36",
+                  "equals": true
+                },
+                {
+                  "key": "to",
+                  "value": "2019-02-21 20:24:37",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a list of all orders for the company"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "0841cd12-3423-4eda-abc3-59166eca5909",
+          "name": "get Order by status",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ddde46f6-5e0e-4d4b-a5b8-8fac38836f6c",
+                "exec": [
+                  "const Status = Math.floor(Math.random()*5 + 1);",
+                  "console.log(Status);",
+                  "pm.environment.set(\"status\", Status);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e5fdf1d3-23e5-451a-8e3a-dc19c2dcdb70",
+                "exec": [
+                  "pm.test(\"Status code should be 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time should be less than 2500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{partner_url}}/order?skip=0&take=20&from=2019-02-06 15:41:36&to=2019-02-21 20:24:37&status={{status}}",
+              "host": [
+                "{{partner_url}}"
+              ],
+              "path": [
+                "order"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "equals": true
+                },
+                {
+                  "key": "take",
+                  "value": "20",
+                  "equals": true
+                },
+                {
+                  "key": "from",
+                  "value": "2019-02-06 15:41:36",
+                  "equals": true
+                },
+                {
+                  "key": "to",
+                  "value": "2019-02-21 20:24:37",
+                  "equals": true
+                },
+                {
+                  "key": "status",
+                  "value": "{{status}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a list of all orders for the company"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "babbeb7d-8455-4803-96bd-b3389c8c3e56",
+          "name": "Get Order_sheet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "13b8dee7-360a-4b4f-82fa-03cfeabeb2e7",
+                "exec": [
+                  "pm.test(\"Status code should be 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type should be  present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time should be  less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{partner_url}}/order/order-sheet",
+            "description": "Returns an csv file containing all devices for the company"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "_postman_id": "3d61bf24-ffe8-452f-b2dd-8dfc53c2577a",
+      "name": "Configuration",
+      "description": "",
+      "item": [
+        {
+          "_postman_id": "c07f4690-d455-4902-b0b4-4f1583540255",
+          "name": "Set Configuration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4ade1b73-6368-4def-aab3-e7726c0e0309",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[\n  {\n    \"code\": \"DefaultCities\",\n    \"value\": [\"Toronto\", \"Montreal\"]\n  },\n    {\n    \"code\": \"StatementDescription\",\n    \"value\": \"Guestlogix Pay\"\n  }\n]"
+            },
+            "url": "{{partner_url}}/configuration",
+            "description": "Set all specified company configurations"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "9a274339-c336-4ca7-9a43-781d989b0be9",
+          "name": "Get Configuration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "980968f4-a1ad-45be-b886-f9100f056077",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time is less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{partner_url}}/configuration",
+            "description": "Get all configurations for the company"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "_postman_id": "0b2e455f-245a-4d95-a690-0b69c9ae3da0",
+      "name": "Traveler List",
+      "description": "",
+      "item": [
+        {
+          "_postman_id": "ffd32c08-2ea7-42d2-be11-d7b15ca9383d",
+          "name": "Get traveler",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ddde46f6-5e0e-4d4b-a5b8-8fac38836f6c",
+                "exec": [
+                  "const Status = Math.floor(Math.random()*5 + 1);",
+                  "console.log(Status);",
+                  "pm.environment.set(\"status\", Status);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e5fdf1d3-23e5-451a-8e3a-dc19c2dcdb70",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "text/plain",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{partner_url}}/traveler?skip=1&take=10&from&to&loggedFrom&loggedTo",
+              "host": [
+                "{{partner_url}}"
+              ],
+              "path": [
+                "traveler"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "1",
+                  "equals": true
+                },
+                {
+                  "key": "take",
+                  "value": "10",
+                  "equals": true
+                },
+                {
+                  "key": "from",
+                  "value": "",
+                  "equals": false
+                },
+                {
+                  "key": "to",
+                  "value": "",
+                  "equals": false
+                },
+                {
+                  "key": "loggedFrom",
+                  "value": "",
+                  "equals": false
+                },
+                {
+                  "key": "loggedTo",
+                  "value": "",
+                  "equals": false
+                }
+              ]
+            },
+            "description": "Returns a list of all orders for the company"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "8f2482fd-bf0a-4b10-963b-f65075430577",
+          "name": "Get traveler with date",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ddde46f6-5e0e-4d4b-a5b8-8fac38836f6c",
+                "exec": [
+                  "const Status = Math.floor(Math.random()*5 + 1);",
+                  "console.log(Status);",
+                  "pm.environment.set(\"status\", Status);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e5fdf1d3-23e5-451a-8e3a-dc19c2dcdb70",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "testtesttesttesttest"
+              },
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{partner_url}}/traveler?skip=0&take=10&from=2019-01-01&to=2019-03-01&loggedFrom&loggedTo",
+              "host": [
+                "{{partner_url}}"
+              ],
+              "path": [
+                "traveler"
+              ],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0",
+                  "equals": false
+                },
+                {
+                  "key": "take",
+                  "value": "10",
+                  "equals": false
+                },
+                {
+                  "key": "from",
+                  "value": "2019-01-01",
+                  "equals": false
+                },
+                {
+                  "key": "to",
+                  "value": "2019-03-01",
+                  "equals": false
+                },
+                {
+                  "key": "loggedFrom",
+                  "value": "",
+                  "equals": false
+                },
+                {
+                  "key": "loggedTo",
+                  "value": "",
+                  "equals": false
+                }
+              ]
+            },
+            "description": "Returns a list of all orders for the company"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "fdd06cba-3f35-4926-a8a0-198759ad0b4a",
+          "name": "Get traveler_sheet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "13b8dee7-360a-4b4f-82fa-03cfeabeb2e7",
+                "exec": [
+                  "pm.test(\"Status code should be 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type should be  present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "pm.test(\"Response time should be  less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{partner_access_token}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "testtesttesttesttest",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{partner_url}}/traveler/traveler-sheet",
+            "description": "Returns an csv file containing all devices for the company"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "a3ea90dd-f015-4c01-b17e-1918a82b7f95",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "bc88a2cb-caed-4171-865c-c600b954ad61",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
