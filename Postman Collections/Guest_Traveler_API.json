@@ -1,0 +1,1635 @@
+{
+  "info": {
+    "_postman_id": "5203518-d47ddf18-71e4-46ca-ba73-a18c4a8cb851",
+    "name": "Guest Traveler API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "_postman_id": "5203518-febbd86e-6200-4838-8376-0638e464c5aa",
+      "name": "auth",
+      "description": "",
+      "item": [
+        {
+          "_postman_id": "5203518-c1628603-c747-4d24-8fbd-db313b38469b",
+          "name": "Obtain JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f13dd90-ebba-43d1-afcd-87c2a56a9a14",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "  if(jsonData.hasOwnProperty(\"token\")){",
+                  "        pm.environment.set(\"AccessToken\", jsonData.token);",
+                  "        pm.environment.set(\"token_expires_date\", jsonData.expires);",
+                  "     ",
+                  "  }else{",
+                  "      return;",
+                  "       ",
+                  "  }",
+                  "   ",
+                  "    pm.test(\"Access token generated\", function()",
+                  "    {",
+                  "        pm.expect(!!jsonData.token).to.eql(true);",
+                  "    });",
+                  "    pm.test(\"Content-Type should be present\", function () {",
+                  "        pm.response.to.have.header(\"Content-Type\");",
+                  "    });",
+                  "",
+                  "    pm.test(\"Status code should be 201\", function () {",
+                  "        pm.response.to.have.status(201);",
+                  "    });",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "f7fac043-3591-478a-8a04-135969aafd01",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{traveler_url}}/auth/token",
+            "description": "<-Implementation Notes->\n\nThis endpoint returns an auth token that is to be used in the Authorization header for all subsequent requests. It uses the deviceId headers to validate."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "4eae705d-bf24-403d-8a5b-823bec7476ba",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "8dd2156e-9cdd-4f7b-9592-25945010fbc3",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-d51fcc22-bbb6-4d5b-a632-ed0fd9466d8c",
+      "name": "Bad Search, Flight two_Days Past ",
+      "description": "This request validate the scenario when the user search a flight whose date is in the past e.g. Return error message for bad request. 400 \"Flight departure day may not be in the past\" ",
+      "item": [
+        {
+          "_postman_id": "5203518-694cd81a-ee7d-43f7-9199-60c6d109c64e",
+          "name": "Bad-Search-flight-2-day past",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3d60f951-5844-468b-aca1-c1e231b1fba4",
+                "exec": [
+                  "pm.test(\"Status code should be 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Bad Request error message\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorMessage).to.eql(\"Date occurs too far in the past, please use a present or future date.\");",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response time should be less than 1000ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+                  "});",
+                  "",
+                  "pm.test(\"RespnseBody should have errorCode of 2002\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorCode).to.eql(2002);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "4bd611bb-bc68-4e4c-abba-4c9922742a5a",
+                "exec": [
+                  "",
+                  "var current_date = new Date();",
+                  "",
+                  "current_date.setDate(current_date.getDate() -2);",
+                  "var dep_date = current_date;",
+                  "pm.environment.set(\"bad_dep_date\", dep_date);",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "value": "{{DeviceId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-os-version",
+                "value": "{{osVersion}}",
+                "type": "text"
+              },
+              {
+                "key": "x-language",
+                "value": "{{language}}",
+                "type": "text"
+              },
+              {
+                "key": "x-locale",
+                "value": "{{locale}}",
+                "type": "text"
+              },
+              {
+                "key": "x-region",
+                "value": "{{region}}",
+                "type": "text"
+              },
+              {
+                "key": "x-application-id",
+                "value": "{{applicationId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-timezone",
+                "value": "{{timeZone}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/flight?flight-number=AC047&departure_date={{bad_dep_date}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "flight"
+              ],
+              "query": [
+                {
+                  "key": "flight-number",
+                  "value": "AC047",
+                  "equals": true
+                },
+                {
+                  "key": "departure_date",
+                  "value": "{{bad_dep_date}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "request to validate the results for search flight that is  2-day past the current search date.\nValidate the search for flight and catalog items past the current date by 2 days"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "ddce88e2-b5c1-4f49-b79f-792a813ac88a",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "b1819e13-a015-4650-9604-96201de6d669",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-9066118b-9a34-4e0e-a217-7a2ce912ecc8",
+      "name": "SearchInvalid flightNum",
+      "description": "Validate the results of any search with invalid flight number",
+      "item": [
+        {
+          "_postman_id": "5203518-94498f89-5479-421b-9e00-cf20ae3ae625",
+          "name": "Get Flight-with-flightNum-No-leading-zero",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3d60f951-5844-468b-aca1-c1e231b1fba4",
+                "exec": [
+                  "// var jsonData = pm.response.json();",
+                  "",
+                  "// if(jsonData[0].hasOwnProperty(\"id\")){",
+                  "//      pm.environment.set(\"flight-id\", jsonData[0].id);",
+                  "     ",
+                  "// }else",
+                  "// {",
+                  "//     return;",
+                  "// }",
+                  "//     pm.test(\"Status code should be 200\", function () {",
+                  "//         pm.response.to.have.status(200);",
+                  "        ",
+                  "//     });",
+                  "    ",
+                  "",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"The responseBoddy should have an errorCode of 3005\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorCode).to.eql(3005);",
+                  "    ",
+                  "    ",
+                  "});",
+                  "",
+                  "pm.test(\"The errorMessage\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorMessage).to.eql(\"Argument has invalid format.\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response time should be less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "4bd611bb-bc68-4e4c-abba-4c9922742a5a",
+                "exec": [
+                  "var moment = require('moment')\r",
+                  "\r",
+                  "\r",
+                  "    pm.environment.set(\"current_timestamp + 2 day\", moment().add(2, 'day').toISOString());"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/flight?flight-number=Z9999999&departure-date={{dep_date}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "flight"
+              ],
+              "query": [
+                {
+                  "key": "flight-number",
+                  "value": "Z9999999",
+                  "equals": true
+                },
+                {
+                  "key": "departure-date",
+                  "value": "{{dep_date}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a list of flights for provided flight number and date"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "482d8360-2413-4188-9229-2a77273a89d3",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "4c51a031-d325-47f8-8b48-50dfb70de2ce",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-022e7c2c-8b24-4458-b259-81b7e08efede",
+      "name": "Search-for-flight-num-with-leading -zero",
+      "description": "\nthis request validate test for any flight whose flight_number has leading zeros.\nThe expected results for flight number e.g AC047 should be the same as AC47",
+      "item": [
+        {
+          "_postman_id": "5203518-b4c900d6-0889-47e6-bd07-89512db36641",
+          "name": "Get-flight-with-leading-zero",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3d60f951-5844-468b-aca1-c1e231b1fba4",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "if(jsonData[0].hasOwnProperty(\"id\")){",
+                  "     pm.environment.set(\"flight-id\", jsonData[0].id);",
+                  "     ",
+                  "}else",
+                  "{",
+                  "    return;",
+                  "}",
+                  "    pm.test(\"Status code should be 200\", function () {",
+                  "        pm.response.to.have.status(200);",
+                  "        ",
+                  "    });",
+                  "    ",
+                  "    pm.test(\"The flight-id should be present\", function(){",
+                  "        pm.expect(!!jsonData[0].id).to.eql(true);",
+                  "        ",
+                  "    });",
+                  "    ",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "4bd611bb-bc68-4e4c-abba-4c9922742a5a",
+                "exec": [
+                  "",
+                  "var current_date = new Date();",
+                  "pm.environment.set(\"dep_date\", current_date);",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/flight?flight-number=AC0865&departure-date={{dep_date}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "flight"
+              ],
+              "query": [
+                {
+                  "key": "flight-number",
+                  "value": "AC0865",
+                  "equals": true
+                },
+                {
+                  "key": "departure-date",
+                  "value": "{{dep_date}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a list of flights for provided flight number and date"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "988df449-4f52-4501-ab52-89df0c636415",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "f3420664-f1f3-47c8-b582-ba498c12f963",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-8faa67b0-cc65-4cb2-8920-fadc0eef8663",
+      "name": "Search-flightNum -without- leading-zero",
+      "description": "Validate the results of any flight whose flight_number has no leading zeros and harmonized them with one with leading zeros",
+      "item": [
+        {
+          "_postman_id": "5203518-a50eb82b-7c5e-4d87-bf0e-69329d3af709",
+          "name": "Get Flight-with-flightNum-No-leading-zero",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3d60f951-5844-468b-aca1-c1e231b1fba4",
+                "exec": [
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "if(jsonData[0].hasOwnProperty(\"id\")){",
+                  "     pm.environment.set(\"flight-id\", jsonData[0].id);",
+                  "     ",
+                  "}else",
+                  "{",
+                  "    return;",
+                  "}",
+                  "",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});pm.test(\"Response time should be less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "4bd611bb-bc68-4e4c-abba-4c9922742a5a",
+                "exec": [
+                  "var current_date = new Date();\r",
+                  "pm.environment.set(\"dep_date\", current_date);\r",
+                  "\r",
+                  "\r",
+                  "var moment = require('moment')\r",
+                  " pm.environment.set(\"current_timestamp + 2 day\", moment().add(2, 'day').toISOString());"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "type": "text",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/flight?flight-number=AC121&departure-date={{current_timestamp + 2 day}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "flight"
+              ],
+              "query": [
+                {
+                  "key": "flight-number",
+                  "value": "AC121",
+                  "equals": true
+                },
+                {
+                  "key": "departure-date",
+                  "value": "{{current_timestamp + 2 day}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a list of flights for provided flight number and date"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "482d8360-2413-4188-9229-2a77273a89d3",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "4c51a031-d325-47f8-8b48-50dfb70de2ce",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-2f3cd573-6c10-4498-96bd-7dabe52828d1",
+      "name": "catalog",
+      "description": "TImplementation Notes\r\n\r\nThis endpoint returns groups of Catalog Items that are available for purchase.\r\n\r\nOptional: Obtain flight-ids  from the /flight endpoint and include as query parameters for more locationally appropriate content. Note: to add more than one flight-ids repeat the query paramter. e.g. /flight?flight-ids=xyz?flight-ids=abc.",
+      "item": [
+        {
+          "_postman_id": "5203518-ec3ce97e-ca77-4526-a4af-67886b99f1db",
+          "name": "Get catalog items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9e1fcc4b-827b-4d3a-8ea0-6314cb7ef38f",
+                "exec": [
+                  "//somethign",
+                  "",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "//check whether the response body has a groups property",
+                  "if(jsonData.hasOwnProperty(\"groups\")){",
+                  "",
+                  "//if true, set group variables to groups property",
+                  "    var group = jsonData.groups",
+                  "    ",
+                  "    //set up for loop to iterate over the groups array",
+                  "    for(var i = 0; i < group.length; i++){",
+                  "     ",
+                  "        //check whether groups arrays has itemes properties",
+                  "    if(group[i].hasOwnProperty(\"items\"))",
+                  "    { ",
+                  "        //if true, create variable items to store items arrays",
+                  "        var items = group[i].items;",
+                  "        ",
+                  "        //check the length of the items arrays",
+                  "        if(items.length === 0){",
+                  "            ",
+                  "        }else{",
+                  "            //if length of the items>0 , set up another for loop to iterate over the items arrays",
+                  "        for(var k = 0; k < items.length; k++){",
+                  "            ",
+                  "            if(items[k].hasOwnProperty(\"id\")){",
+                  "                ",
+                  "                if(items[k].id !==undefined){",
+                  "                    //once items_id is found break out of the for loop",
+                  "                    pm.environment.set(\"Item-Id\", items[k].id);",
+                  "                    break;",
+                  "                }",
+                  "               ",
+                  "        }else{",
+                  "            return;",
+                  "            }",
+                  "        ",
+                  "    }",
+                  "        }",
+                  "    }else{",
+                  "     return;",
+                  "    ",
+                  "    }",
+                  "    }",
+                  "       ",
+                  "  }",
+                  "",
+                  "pm.test(\"Status code should be 200\", function ()",
+                  "{",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json-patch+json",
+                "type": "text"
+              },
+              {
+                "key": "x-device-id",
+                "value": "{{DeviceId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-os-version",
+                "value": "{{osVersion}}",
+                "type": "text"
+              },
+              {
+                "key": "x-language",
+                "value": "{{language}}",
+                "type": "text"
+              },
+              {
+                "key": "x-locale",
+                "value": "{{locale}}",
+                "type": "text"
+              },
+              {
+                "key": "x-region",
+                "value": "{{region}}",
+                "type": "text"
+              },
+              {
+                "key": "x-application-id",
+                "value": "{{applicationId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-timezone",
+                "value": "{{timeZone}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/catalog?flight-ids={{flight-id}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "catalog"
+              ],
+              "query": [
+                {
+                  "key": "flight-ids",
+                  "value": "{{flight-id}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "This return the catalogue items of fromCity and toCity of a given flight whose flight_id is passed in the GET REQUEST \n\nif the flight_id is not provided in the GET REQUEST query, it returns the catalogue items for the current city and those of the promoted cities."
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "5203518-85b1f208-1d7d-4990-9ae9-3554a44ace11",
+          "name": "Get default catalog items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9e1fcc4b-827b-4d3a-8ea0-6314cb7ef38f",
+                "exec": [
+                  "//somethign",
+                  "",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "//check whether the response body has a groups property",
+                  "if(jsonData.hasOwnProperty(\"groups\")){",
+                  "",
+                  "//if true, set group variables to groups property",
+                  "    var group = jsonData.groups",
+                  "    ",
+                  "    //set up for loop to iterate over the groups array",
+                  "    for(var i = 0; i < group.length; i++){",
+                  "     ",
+                  "        //check whether groups arrays has itemes properties",
+                  "    if(group[i].hasOwnProperty(\"items\"))",
+                  "    { ",
+                  "        //if true, create variable items to store items arrays",
+                  "        var items = group[i].items;",
+                  "        ",
+                  "        //check the length of the items arrays",
+                  "        if(items.length === 0){",
+                  "            ",
+                  "        }else{",
+                  "            //if length of the items>0 , set up another for loop to iterate over the items arrays",
+                  "        for(var k = 0; k < items.length; k++){",
+                  "            ",
+                  "            if(items[k].hasOwnProperty(\"id\")){",
+                  "                ",
+                  "                if(items[k].id !==undefined){",
+                  "                    //once items_id is found break out of the for loop",
+                  "                    pm.environment.set(\"Item-Id\", items[k].id);",
+                  "                    break;",
+                  "                }",
+                  "               ",
+                  "        }else{",
+                  "            return;",
+                  "            }",
+                  "        ",
+                  "    }",
+                  "        }",
+                  "    }else{",
+                  "     return;",
+                  "    ",
+                  "    }",
+                  "    }",
+                  "       ",
+                  "  }",
+                  "",
+                  "pm.test(\"Status code should be 200\", function ()",
+                  "{",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type should be present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "type": "text",
+                "value": "application/json-patch+json"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{traveler_url}}/catalog",
+            "description": "This return the default catalogue items of user current  city reflect by the reverse ip address of their device."
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "20db87b7-db42-4309-8af8-f96d5f947368",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "d9510e43-ebbe-4f53-8220-19429ad5247e",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "_postman_id": "5203518-05d97b41-faff-4670-88a3-795ec3aba6eb",
+      "name": "product ",
+      "description": "containers for GET REQUESTs for the product related endpoints",
+      "item": [
+        {
+          "_postman_id": "5203518-6610eee9-7b02-4763-9720-a800944c5d09",
+          "name": "Get catalog item by its Id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5439fd47-6ce1-46f1-a0ec-a1e42bdc6197",
+                "exec": [
+                  "",
+                  "pm.test(\"Status code should 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function (){",
+                  "    pm.expect(pm.response.responseTime).to.be.above(200);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"product_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              },
+              {
+                "key": "x-device-id",
+                "value": "{{DeviceId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-os-version",
+                "value": "{{osVersion}}",
+                "type": "text"
+              },
+              {
+                "key": "x-language",
+                "value": "{{language}}",
+                "type": "text"
+              },
+              {
+                "key": "x-locale",
+                "value": "{{locale}}",
+                "type": "text"
+              },
+              {
+                "key": "x-region",
+                "value": "{{region}}",
+                "type": "text"
+              },
+              {
+                "key": "x-application-id",
+                "value": "{{applicationId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-timezone",
+                "value": "{{timeZone}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{traveler_url}}/product/{{Item-Id}}",
+            "description": "Returns a details of the  requested catalog item using its Id"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "5203518-1095ee37-9c6c-4da1-9724-435f88a0565e",
+          "name": "Get catalog item by Invalid product-id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5439fd47-6ce1-46f1-a0ec-a1e42bdc6197",
+                "exec": [
+                  "",
+                  "pm.test(\"Status code should 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 500ms\", function (){",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  "pm.test(\"The responseBidy should contain errorMessage\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorMessage).to.eql(\"Argument has invalid format: catalogItemId\");",
+                  "});",
+                  "pm.test(\"errorCode should be 1003\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errorCode).to.eql(1003);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "type": "text",
+                "value": "{{x-api-key}}"
+              },
+              {
+                "key": "x-device-id",
+                "type": "text",
+                "value": "{{DeviceId}}"
+              },
+              {
+                "key": "x-os-version",
+                "type": "text",
+                "value": "{{osVersion}}"
+              },
+              {
+                "key": "x-language",
+                "type": "text",
+                "value": "{{language}}"
+              },
+              {
+                "key": "x-locale",
+                "type": "text",
+                "value": "{{locale}}"
+              },
+              {
+                "key": "x-region",
+                "type": "text",
+                "value": "{{region}}"
+              },
+              {
+                "key": "x-application-id",
+                "type": "text",
+                "value": "{{applicationId}}"
+              },
+              {
+                "key": "x-timezone",
+                "type": "text",
+                "value": "{{timeZone}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": "{{traveler_url}}/product/{{invalid-Product-Id}}",
+            "description": "use to invalid the outcomes of fetching catalog expereiences using invalid product-id"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "5203518-a3c02f39-eb60-4d38-b5ac-355083f40c99",
+          "name": "Get catalog schedule given a date range inclusive",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "88c97fde-ae9d-44e6-bc54-75fe0d930eb1",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  " pm.environment.set(\"availability_id\", jsonData[0].id);",
+                  " ",
+                  "if (jsonData[0].optionSet.options[0].id){",
+                  "     var option_Id = jsonData[0].optionSet.options[0].id;",
+                  "     pm.environment.set(\"option_id\", option_Id );",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "57303077-0618-4604-9aa6-47054536d96b",
+                "exec": [
+                  "var startDate = new Date();",
+                  "",
+                  "pm.environment.set(\"start_date\", startDate);",
+                  "",
+                  "var endDate = new Date();",
+                  "//incremenet current date with 15 days to have the end date",
+                  "endDate.setDate(endDate.getDate()+15);",
+                  "pm.environment.set(\"end_date\", endDate);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              },
+              {
+                "key": "x-device-id",
+                "value": "{{DeviceId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-os-version",
+                "value": "{{osVersion}}",
+                "type": "text"
+              },
+              {
+                "key": "x-language",
+                "value": "{{language}}",
+                "type": "text"
+              },
+              {
+                "key": "x-locale",
+                "value": "{{locale}}",
+                "type": "text"
+              },
+              {
+                "key": "x-region",
+                "value": "{{region}}",
+                "type": "text"
+              },
+              {
+                "key": "x-application-id",
+                "value": "{{applicationId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-timezone",
+                "value": "{{timeZone}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/product/{{Item-Id}}/schedule?from={{start_date}}&to={{end_date}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "product",
+                "{{Item-Id}}",
+                "schedule"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "{{start_date}}",
+                  "equals": true
+                },
+                {
+                  "key": "to",
+                  "value": "{{end_date}}",
+                  "equals": true
+                }
+              ]
+            },
+            "description": "Returns a requested catalog items schedule given a date range inclusive"
+          },
+          "response": []
+        },
+        {
+          "_postman_id": "5203518-4f5015da-87ac-4fb0-bbb7-fea64b5896ce",
+          "name": "Get all passes of catalog items  given date and time",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "dee0b60c-346d-4a22-bbfa-711660714d9e",
+                "exec": [
+                  "",
+                  "",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Content-Type is present\", function () {",
+                  "    pm.response.to.have.header(\"Content-Type\");",
+                  "});",
+                  "",
+                  "var data = pm.response.json();",
+                  "     pm.environment.set(\"pass_id\", data[0].id);",
+                  "     pm.environment.set(\"pass_price\", data[0].price.value);",
+                  "     pm.environment.set(\"pass_name\", data[0].name);",
+                  "",
+                  "     ",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{AccessToken}}"
+              }
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{x-api-key}}",
+                "type": "text"
+              },
+              {
+                "key": "x-device-id",
+                "value": "{{DeviceId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-os-version",
+                "value": "{{osVersion}}",
+                "type": "text"
+              },
+              {
+                "key": "x-language",
+                "value": "{{language}}",
+                "type": "text"
+              },
+              {
+                "key": "x-locale",
+                "value": "{{locale}}",
+                "type": "text"
+              },
+              {
+                "key": "x-region",
+                "value": "{{region}}",
+                "type": "text"
+              },
+              {
+                "key": "x-application-id",
+                "value": "{{applicationId}}",
+                "type": "text"
+              },
+              {
+                "key": "x-timezone",
+                "value": "{{timeZone}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{traveler_url}}/product/{{Item-Id}}/pass?date={{pass_date}}",
+              "host": [
+                "{{traveler_url}}"
+              ],
+              "path": [
+                "product",
+                "{{Item-Id}}",
+                "pass"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "{{pass_date}}",
+                  "equals": true
+                },
+                {
+                  "key": "time-in-minutes",
+                  "value": "{{time_in_minutes}}",
+                  "equals": true,
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Returns all catalog item passes given a date and time"
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "93e10f7c-5166-47b2-be82-495085558867",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "5c4a02b9-adeb-4088-a421-3e041f7e8adc",
+            "type": "text/javascript",
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "c3a495d7-879c-486c-8856-d9da9af5ca93",
+        "type": "text/javascript",
+        "exec": [
+          "// const uuid =  Math.floor((Math.random()*100)+1);",
+          "// const email = \"deSanto_\" + uuid + \"@guestlogix.com\";",
+          "//  pm.environment.set(\"currentEmail\", email);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "c897e66b-6580-4db9-a971-972ca8600e26",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
